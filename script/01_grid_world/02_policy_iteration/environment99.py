@@ -6,8 +6,8 @@ from PIL import ImageTk, Image
 
 PhotoImage = ImageTk.PhotoImage
 UNIT = 100  # Number of pixels for each square
-HEIGHT = 5  # Number of grids in vertical direction
-WIDTH = 5  # Number of grids in horizontal direction
+HEIGHT = 9  # Number of grids in vertical direction
+WIDTH = 9  # Number of grids in horizontal direction
 TRANSITION_PROB = 1
 POSSIBLE_ACTIONS = [0, 1, 2, 3]  # up, down, left, right
 ACTIONS = [(-1, 0), (1, 0), (0, -1), (0, 1)]  # actions expressed in terms of (x, y)
@@ -28,9 +28,9 @@ class GraphicDisplay(tk.Tk):
         self.is_moving = 0
         (self.up, self.down, self.left, self.right), self.shapes = self.load_images()
         self.canvas = self._build_canvas()
-        self.text_reward(2, 2, "R : 1.0")
-        self.text_reward(1, 2, "R : -1.0")
-        self.text_reward(2, 1, "R : -1.0")
+        self.text_reward(4, 4, "R : 1.0")
+        self.text_reward(3, 4, "R : -1.0")
+        self.text_reward(4, 3, "R : -1.0")
 
     def _build_canvas(self):
         canvas = tk.Canvas(self, bg='white',
@@ -66,9 +66,9 @@ class GraphicDisplay(tk.Tk):
 
         # add image to canvas
         self.rectangle = canvas.create_image(50, 50, image=self.shapes[0])
-        canvas.create_image(250, 150, image=self.shapes[1])
-        canvas.create_image(150, 250, image=self.shapes[1])
-        canvas.create_image(250, 250, image=self.shapes[2])
+        canvas.create_image(450, 350, image=self.shapes[1])
+        canvas.create_image(350, 450, image=self.shapes[1])
+        canvas.create_image(450, 450, image=self.shapes[2])
 
         canvas.pack()
 
@@ -96,7 +96,7 @@ class GraphicDisplay(tk.Tk):
             self.agent.value_table = [[0.0] * WIDTH for _ in range(HEIGHT)]
             self.agent.policy_table = ([[[0.25, 0.25, 0.25, 0.25]] * WIDTH
                                         for _ in range(HEIGHT)])
-            self.agent.policy_table[2][2] = []
+            self.agent.policy_table[4][4] = []
             x, y = self.canvas.coords(self.rectangle)
             self.canvas.move(self.rectangle, UNIT / 2 - x, UNIT / 2 - y)
 
@@ -154,7 +154,7 @@ class GraphicDisplay(tk.Tk):
             self.is_moving = 0
 
     def draw_one_arrow(self, col, row, policy):
-        if col == 2 and row == 2:
+        if col == 4 and row == 4:
             return
 
         if policy[0] > 0:  # up
@@ -211,9 +211,9 @@ class Env:
         self.height = HEIGHT
         self.reward = [[0] * WIDTH for _ in range(HEIGHT)]
         self.possible_actions = POSSIBLE_ACTIONS
-        self.reward[2][2] = 1  # reward 1 for the state (2,2)
-        self.reward[1][2] = -1  # reward -1 for the state (1,2)
-        self.reward[2][1] = -1  # reward -1 for the state (2,1)
+        self.reward[4][4] = 1  # reward 1 for the state (4,4)
+        self.reward[3][4] = -1  # reward -1 for the state (1,2)
+        self.reward[4][3] = -1  # reward -1 for the state (2,1)
         self.all_state = []
 
         for x in range(WIDTH):
